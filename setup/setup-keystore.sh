@@ -35,16 +35,17 @@ KIBANA_TOKEN=$(/usr/share/elasticsearch/bin/elasticsearch-service-tokens create 
 echo "KIBANA_SERVICE_ACCOUNT_TOKEN=$KIBANA_TOKEN" > $OUTPUT_KIBANA_TOKEN
 
 ###### Fleet Server
-# Generating Fleet Server service token
-echo "Generating Fleet Server service token..."
+if [ "${FLEET_SERVER_ENABLE}" = yes ]; then
+    # Generating Fleet Server service token
+    echo "Generating Fleet Server service token..."
 
-# Delete old token if exists
-/usr/share/elasticsearch/bin/elasticsearch-service-tokens delete elastic/fleet-server default &> /dev/null || true
+    # Delete old token if exists
+    /usr/share/elasticsearch/bin/elasticsearch-service-tokens delete elastic/fleet-server default &> /dev/null || true
 
-# Generate new token
-FLEET_SERVER_TOKEN=$(/usr/share/elasticsearch/bin/elasticsearch-service-tokens create elastic/fleet-server default | cut -d '=' -f2 | tr -d ' ')
-echo "FLEET_SERVER_SERVICE_ACCOUNT_TOKEN=$KIBANA_TOKEN" > $OUTPUT_FLEET_SERVER_TOKEN
-
+    # Generate new token
+    FLEET_SERVER_TOKEN=$(/usr/share/elasticsearch/bin/elasticsearch-service-tokens create elastic/fleet-server default | cut -d '=' -f2 | tr -d ' ')
+    echo "FLEET_SERVER_SERVICE_ACCOUNT_TOKEN=$KIBANA_TOKEN" > $OUTPUT_FLEET_SERVER_TOKEN
+fi
 
 # Replace current Keystore
 if [ -f "$OUTPUT_KEYSTORE" ]; then
@@ -74,5 +75,5 @@ printf "About Reloading Settings: https://www.elastic.co/guide/en/elasticsearch/
 printf "=====================================================\n"
 printf "Your 'elastic' user password is: $ELASTIC_PASSWORD\n"
 printf "Your Kibana service token is: $KIBANA_TOKEN\n"
-printf "Your Fleet Server service token is: $FLEET_SERVER_TOKEN\n"
+[ "${FLEET_SERVER_ENABLE}" = yes ] && printf "Your Fleet Server service token is: $FLEET_SERVER_TOKEN\n";
 printf "=====================================================\n"

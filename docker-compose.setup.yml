@@ -14,6 +14,7 @@ services:
         - ./setup/:/setup/
     environment:
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      FLEET_SERVER_ENABLE: ${FLEET_SERVER_ENABLE}
 
   certs:
     image: elastdocker/elasticsearch:${ELK_VERSION}
@@ -26,3 +27,5 @@ services:
     volumes:
       - ./secrets:/secrets
       - ./setup/:/setup
+    environment:
+      FLEET_SERVER_ENABLE: ${FLEET_SERVER_ENABLE}

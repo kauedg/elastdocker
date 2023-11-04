@@ -22,9 +22,17 @@ mkdir -p $OUTPUT_DIR/ca
 printf "Generating CA Certificates... \n"
 PASSWORD=`openssl rand -base64 32`
 /usr/share/elasticsearch/bin/elasticsearch-certutil ca --pass "$PASSWORD" --pem --out $ZIP_CA_FILE &> /dev/null
+
 printf "Generating Certificates... \n"
 unzip -qq $ZIP_CA_FILE -d $OUTPUT_DIR;
-/usr/share/elasticsearch/bin/elasticsearch-certutil cert --silent --pem  --ca-cert $OUTPUT_DIR/ca/ca.crt --ca-key $OUTPUT_DIR/ca/ca.key --ca-pass "$PASSWORD" --in /setup/instances.yml -out $ZIP_FILE  &> /dev/null
+
+# Remove fleet-server key
+INSTANCES="$(cat /setup/instances.yml)"
+if [ "${FLEET_SERVER_ENABLE}" != yes ]; then
+    INSTANCES=$(echo "$INSTANCES" | sed -e "/name: fleet-server/,+5d")
+fi
+
+/usr/share/elasticsearch/bin/elasticsearch-certutil cert --silent --pem  --ca-cert $OUTPUT_DIR/ca/ca.crt --ca-key $OUTPUT_DIR/ca/ca.key --ca-pass "$PASSWORD" --in <(echo "$INSTANCES") -out $ZIP_FILE  &> /dev/null
 
 printf "Unzipping Certifications... \n"
 unzip -qq $ZIP_FILE -d $OUTPUT_DIR;
