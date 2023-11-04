@@ -32,7 +32,6 @@ echo "Generating Kibana service token..."
 
 # Generate new token
 KIBANA_TOKEN=$(/usr/share/elasticsearch/bin/elasticsearch-service-tokens create elastic/kibana default | cut -d '=' -f2 | tr -d ' ')
-echo "Kibana service token is: $KIBANA_TOKEN"
 echo "KIBANA_SERVICE_ACCOUNT_TOKEN=$KIBANA_TOKEN" > $OUTPUT_KIBANA_TOKEN
 
 ###### Fleet Server
@@ -44,7 +43,6 @@ echo "Generating Fleet Server service token..."
 
 # Generate new token
 FLEET_SERVER_TOKEN=$(/usr/share/elasticsearch/bin/elasticsearch-service-tokens create elastic/fleet-server default | cut -d '=' -f2 | tr -d ' ')
-echo "Fleet Server service token is: $FLEET_SERVER_TOKEN"
 echo "FLEET_SERVER_SERVICE_ACCOUNT_TOKEN=$KIBANA_TOKEN" > $OUTPUT_FLEET_SERVER_TOKEN
 
 
