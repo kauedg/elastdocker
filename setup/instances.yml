@@ -19,3 +19,10 @@ instances:
       - localhost
     ip:
       - 127.0.0.1
+
+  - name: fleet-server
+    dns:
+      - fleet-server
+      - localhsot
+    ip:
+      - 127.0.0.1
