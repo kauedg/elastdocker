@@ -1,5 +1,10 @@
 version: '3.5'
 
+networks:
+  elastic:
+    name: elastic
+    external: false
+
 services:
   keystore:
     image: elastdocker/elasticsearch:${ELK_VERSION}
@@ -29,3 +34,22 @@ services:
       - ./setup/:/setup
     environment:
       FLEET_SERVER_ENABLE: ${FLEET_SERVER_ENABLE}
+
+  fleet-server:
+    image: elastdocker/elastic-agent:${ELK_VERSION}
+    build:
+      context: fleet-server/
+      args:
+        ELK_VERSION: ${ELK_VERSION}
+    entrypoint: bash /setup/fleet-prepare.sh
+    networks:
+      - elastic
+    volumes:
+      - ./secrets:/secrets
+      - ./setup/:/setup
+    environment:
+      FLEET_SERVER_ENABLE: ${FLEET_SERVER_ENABLE}
+      ELASTIC_USERNAME: ${ELASTIC_USERNAME}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      KIBANA_HOST: ${KIBANA_HOST}
+      KIBANA_PORT: ${KIBANA_PORT}

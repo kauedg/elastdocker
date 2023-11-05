@@ -27,6 +27,9 @@ keystore:		## Setup Elasticsearch Keystore, by initializing passwords, and add c
 certs:		    ## Generate Elasticsearch SSL Certs.
 	$(DOCKER_COMPOSE_COMMAND) -f docker-compose.setup.yml run --rm certs
 
+fleet-server:		## Configure Fleet Server
+	$(DOCKER_COMPOSE_COMMAND) -f docker-compose.setup.yml run --rm fleet-server
+
 setup:		    ## Generate Elasticsearch SSL Certs and Keystore.
 	@make certs
 	@make keystore
@@ -60,7 +63,7 @@ down:			## Down ELK and all its extra components.
 
 stop:			## Stop ELK and all its extra components.
 	$(DOCKER_COMPOSE_COMMAND) ${COMPOSE_ALL_FILES} stop ${ELK_ALL_SERVICES}
-	
+
 restart:		## Restart ELK and all its extra components.
 	$(DOCKER_COMPOSE_COMMAND) ${COMPOSE_ALL_FILES} restart ${ELK_ALL_SERVICES}
 
