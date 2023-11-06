@@ -134,8 +134,6 @@ services:
       args:
         ELK_VERSION: $ELK_VERSION
     restart: unless-stopped
-    ports:
-      - "8200:8200"
     volumes:
       - ./apm-server/config/apm-server.yml:/usr/share/apm-server/apm-server.yml:ro
     environment:
@@ -150,3 +148,5 @@ services:
         target: /certs/apm-server.crt
       - source: apm-server.key
         target: /certs/apm-server.key
+    ports:
+      - "${APMSERVER_PORT}:${APMSERVER_PORT}"
